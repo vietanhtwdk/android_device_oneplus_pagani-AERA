@@ -17,7 +17,7 @@
 #
 # 	Please maintain this if you use this script or any part of it
 #
-FDEVICE="dodge"
+FDEVICE="pagani"
 
 aera_get_target_device() {
 local chkdev=$(echo "$BASH_SOURCE" | grep -w $FDEVICE)
@@ -44,7 +44,7 @@ if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export AERA_DELETE_AROMAFM=1
 	export AERA_VANILLA_BUILD=1
 	export AERA_PRODUCT_PREFIX=AERA
-	export AERA_BUILD_STATUS=Official
+	export AERA_BUILD_STATUS=Unofficial
 	export AERA_BUILD_TYPE=Beta
 	export AERA_PRODUCT_PREFIX="$AERA_PRODUCT_PREFIX"
 	export AERA_USE_GREP_BINARY=1
@@ -54,7 +54,7 @@ if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export AERA_ALLOW_EARLY_SETTINGS_LOAD=1
 	export AERA_USE_UPDATED_MAGISKBOOT=1
 	# Keep magiskboot/repacking support, but omit the bundled installer ZIP.
-	# AERA's WPE runtime shares dodge's strict 100 MiB recovery partition.
+	# AERA's WPE runtime shares the strict 100 MiB recovery partition.
 	export AERA_DELETE_MAGISK_ADDON=1
 	export AERA_USE_FSCK_EROFS_BINARY=1
 	export AERA_USE_PATCHELF_BINARY=1
@@ -62,12 +62,11 @@ if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
         export AERA_MISCELLANEOUS_ROOT_DIRECTORY=/sdcard
         export AERA_ALLOW_EARLY_SETTINGS_LOAD=1
 
-	# For OnePlus 13
-	export TARGET_DEVICE_ALT="PJZ110,OP5D55L1,OP5D0DL1,CPH2649,CPH2653,CPH2655"
+	# For OnePlus 13T / 13s
+	export TARGET_DEVICE_ALT="pagani,PKX110,CPH2723,CPH2727,OP60F5L1,OP612BL1"
 	export AERA_TARGET_DEVICES="$TARGET_DEVICE_ALT"
 	export AERA_USE_DMSETUP=1
 	export AERA_ENABLE_ROOT_MANAGER=1
-	export AERA_ENABLE_MOBILE_DATA=1
 	# AERA begins at R1.0; do not append a legacy maintainer patch suffix.
 	unset AERA_MAINTAINER_PATCH_VERSION
 fi

@@ -1,0 +1,8 @@
+* text=auto eol=lf
+*.so binary
+*.ko binary
+*.bin binary
+*.img binary
+*.mbn binary
+*.fw binary
+*.elf binary

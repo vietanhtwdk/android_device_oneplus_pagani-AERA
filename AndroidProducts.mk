@@ -9,9 +9,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/twrp_dodge.mk
+    $(LOCAL_DIR)/twrp_pagani.mk
 
 COMMON_LUNCH_CHOICES := \
-    twrp_dodge-user \
-    twrp_dodge-userdebug \
-    twrp_dodge-eng
+    twrp_pagani-user \
+    twrp_pagani-userdebug \
+    twrp_pagani-eng

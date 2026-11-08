@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-DEVICE_PATH := device/oneplus/dodge
+DEVICE_PATH := device/oneplus/pagani
 
 
 # For building with minimal manifest
@@ -91,9 +91,9 @@ BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
 
 # Dynamic Partition
-BOARD_SUPER_PARTITION_SIZE := 15354134528
+BOARD_SUPER_PARTITION_SIZE := 14956888064
 BOARD_SUPER_PARTITION_GROUPS := qti_dynamic_partitions
-BOARD_QTI_DYNAMIC_PARTITIONS_SIZE := 15349940224
+BOARD_QTI_DYNAMIC_PARTITIONS_SIZE := 14952693760
 BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := \
 	system system_ext product vendor vendor_dlkm odm
 BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST += \
@@ -167,22 +167,23 @@ PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
-AERA_DEVICE_VERSION := OnePlus_13
+AERA_DEVICE_VERSION := OnePlus_13T
 
 # Vibrator
 AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
 
 # Other AERA configurations
 TARGET_RECOVERY_QCOM_RTC_FIX := true
-AERA_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone45/temp" # CPU-0-0-0
+AERA_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone2/temp" # CPU-0-0-0
 AERA_EXCLUDE_APEX := true
 AERA_EXCLUDE_DEFAULT_USB_INIT := true
 AERA_DEFAULT_LANGUAGE := en
 AERA_EXTRA_LANGUAGES := true
-AERA_LOAD_VENDOR_MODULES := "oplus_bsp_synaptics_tcm2.ko oplus_bsp_tp_common.ko oplus_bsp_tp_custom.ko oplus_bsp_tp_focal_common.ko oplus_bsp_tp_ft3518.ko oplus_bsp_tp_ft3658u_spi.ko oplus_bsp_tp_ft3681.ko oplus_bsp_tp_ft3683g.ko oplus_bsp_tp_ft8057p.ko oplus_bsp_tp_goodix_comnon.ko oplus_bsp_tp_gt9916.ko oplus_bsp_tp_gt9966.ko oplus_bsp_tp_ilitek7807s.ko oplus_bsp_tp_ilitek_common.ko oplus_bsp_tp_notify.ko oplus_bsp_tp_novatek_common.ko oplus_bsp_tp_nt36528_noflash.ko oplus_bsp_tp_nt36532_noflash.ko oplus_bsp_tp_nt36672c_noflash.ko oplus_bsp_tp_syna_common.ko oplus_bsp_tp_tcm_S3908.ko oplus_bsp_tp_tcm_S3910.ko oplus_bsp_tp_td4377_noflash.ko q6_notifier_dlkm.ko spf_core_dlkm.ko audpkt_ion_dlkm.ko gpr_dlkm.ko audio_pkt_dlkm.ko q6_dlkm.ko adsp_loader_dlkm.ko audio_prm_dlkm.ko q6_pdr_dlkm.ko pinctrl_lpi_dlkm.ko swr_dlkm.ko swr_ctrl_dlkm.ko snd_event_dlkm.ko wcd_core_dlkm.ko mbhc_dlkm.ko sdca_registers_dlkm.ko wcd9xxx_dlkm.ko stub_dlkm.ko swr_dmic_dlkm.ko swr_haptics_dlkm.ko hdmi_dlkm.ko lpass_cdc_wsa2_macro_dlkm.ko lpass_cdc_wsa_macro_dlkm.ko lpass_cdc_va_macro_dlkm.ko lpass_cdc_rx_macro_dlkm.ko lpass_cdc_tx_macro_dlkm.ko lpass_cdc_dlkm.ko wsa884x_dlkm.ko wsa883x_dlkm.ko wcd938x_dlkm.ko wcd938x_slave_dlkm.ko wcd939x_dlkm.ko wcd939x_slave_dlkm.ko wcd9378_dlkm.ko wcd9378_slave_dlkm.ko lpass_bt_swr_dlkm.ko machine_dlkm.ko oplus_audio_aw882xx.ko frpc-adsprpc.ko oplus_chg_v2.ko stm_st54se_gpio.ko nxp-nci.ko smem-mailbox.ko cnss_prealloc.ko cnss_utils.ko cnss_plat_ipc_qmi_svc.ko cnss_nl.ko wlan_firmware_service.ko cnss2.ko msm_kgsl.ko"
-AERA_POST_DECRYPT_MODULES := "rfkill.ko cfg80211.ko gsim.ko rmnet_mem.ko ipam.ko qca_cld3_peach_v2.ko btpower.ko btfmcodec.ko bt_fm_swr.ko"
+AERA_LOAD_VENDOR_MODULES := "oplus_bsp_synaptics_tcm2.ko oplus_bsp_tp_common.ko oplus_bsp_tp_custom.ko oplus_bsp_tp_focal_common.ko oplus_bsp_tp_ft3518.ko oplus_bsp_tp_ft3658u_spi.ko oplus_bsp_tp_ft3681.ko oplus_bsp_tp_ft3683g.ko oplus_bsp_tp_ft8057p.ko oplus_bsp_tp_goodix_comnon.ko oplus_bsp_tp_gt9916.ko oplus_bsp_tp_gt9966.ko oplus_bsp_tp_ilitek7807s.ko oplus_bsp_tp_ilitek_common.ko oplus_bsp_tp_notify.ko oplus_bsp_tp_novatek_common.ko oplus_bsp_tp_nt36528_noflash.ko oplus_bsp_tp_nt36532_noflash.ko oplus_bsp_tp_nt36672c_noflash.ko oplus_bsp_tp_syna_common.ko oplus_bsp_tp_tcm_S3908.ko oplus_bsp_tp_tcm_S3910.ko oplus_bsp_tp_td4377_noflash.ko q6_notifier_dlkm.ko spf_core_dlkm.ko gpr_dlkm.ko adsp_loader_dlkm.ko q6_pdr_dlkm.ko snd_event_dlkm.ko oplus_chg_v2.ko stm_st54se_gpio.ko nxp-nci.ko smem-mailbox.ko cnss_prealloc.ko cnss_utils.ko cnss_plat_ipc_qmi_svc.ko cnss_nl.ko wlan_firmware_service.ko cnss2.ko msm_kgsl.ko"
+AERA_POST_DECRYPT_MODULES := "rfkill.ko cfg80211.ko gsim.ko rmnet_mem.ko ipam.ko qca_cld3_peach_v2.ko"
 # Authenticate the AERA screen lock using existing Android owner fingerprints.
-AERA_SUPPORT_FINGERPRINT := 1
+# pagani uses an optical sensor; the dodge (ultrasonic) path is untested here.
+AERA_SUPPORT_FINGERPRINT := 0
 ifeq ($(AERA_SUPPORT_FINGERPRINT),1)
 AERA_POST_DECRYPT_MODULES := "$(subst ",,$(AERA_POST_DECRYPT_MODULES)) panel_event_notifier.ko qbt_handler.ko oplus_bsp_uff_fp_driver.ko"
 endif

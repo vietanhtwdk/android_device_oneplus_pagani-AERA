@@ -40,12 +40,9 @@ on boot
     chown system system /sys/class/leds/vibrator/f0_data
     chown system system /sys/class/leds/vibrator/rtp_going
 #endif /* OPLUS_FEATURE_CHG_BASIC */
-# Keep the vibrator HAL and its private dependencies in the recovery ramdisk.
-# The stock /odm service must be stopped when Super is released for live
-# fastbootd, which otherwise removes haptics for the duration of that session.
-service vendor.oplus.vibrator /system/bin/vendor.qti.hardware.vibrator.service
+service vendor.oplus.vibrator /odm/bin/hw/vendor.oplus.hardware.vibrator-service
     class late_start
-    user root
-    group root input
-    setenv LD_LIBRARY_PATH /system/lib64/qti_vibrator:/system/lib64
-    seclabel u:r:recovery:s0
+    user system
+    group system input
+    setenv RICHTAP_DEVICE_PATH /dev/awinic_haptic
+    setenv ENV_RICHTAP_CONFIG_PATH /odm/etc/aac_richtap.config

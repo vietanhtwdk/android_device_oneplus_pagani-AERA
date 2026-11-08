@@ -1,0 +1,92 @@
+name: Build AERA (pagani)
+
+on:
+  workflow_dispatch:
+    inputs:
+      MANIFEST_BRANCH:
+        description: "AERA manifest branch"
+        required: true
+        default: "aera-16.0"
+      DEVICE_TREE_BRANCH:
+        description: "Branch of this device tree"
+        required: true
+        default: "aera-16.0"
+      RECOVERY_SOURCE_URL:
+        description: "bootable/recovery override (empty = use the manifest's AERA source)"
+        required: false
+        default: "https://github.com/vietanhtwdk/android_bootable_recovery"
+      RECOVERY_SOURCE_BRANCH:
+        description: "bootable/recovery override branch"
+        required: false
+        default: "aera-16.0"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@v10
+        with:
+          root-reserve-mb: 4096
+          swap-size-mb: 8192
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
+          build-mount-path: /home/runner/aera
+
+      - name: Set up tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y repo git-lfs ccache
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          df -h /home/runner/aera
+
+      - name: Sync AERA source
+        working-directory: /home/runner/aera
+        run: |
+          repo init -u https://github.com/AERA-Recovery/android_manifest.git \
+            -b "${{ inputs.MANIFEST_BRANCH }}" --depth=1 --no-use-superproject \
+            --git-lfs
+          repo sync -c --force-sync --no-clone-bundle --no-tags --optimized-fetch \
+            -j"$(nproc)"
+          df -h .
+
+      - name: Add device tree
+        working-directory: /home/runner/aera
+        run: |
+          git clone --depth=1 -b "${{ inputs.DEVICE_TREE_BRANCH }}" \
+            "https://github.com/${{ github.repository }}" device/oneplus/pagani
+
+      - name: Override bootable/recovery
+        if: ${{ inputs.RECOVERY_SOURCE_URL != '' }}
+        working-directory: /home/runner/aera
+        run: |
+          rm -rf bootable/recovery
+          git clone --depth=1 -b "${{ inputs.RECOVERY_SOURCE_BRANCH }}" \
+            "${{ inputs.RECOVERY_SOURCE_URL }}" bootable/recovery
+
+      - name: Build recovery image
+        working-directory: /home/runner/aera
+        run: |
+          source build/envsetup.sh
+          export ALLOW_MISSING_DEPENDENCIES=true
+          export USE_CCACHE=1 CCACHE_EXEC="$(command -v ccache)"
+          lunch twrp_pagani-bp2a-eng
+          mka adbd recoveryimage
+          ls -la out/target/product/pagani/
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: pagani-${{ github.run_id }}
+          name: AERA pagani ${{ github.run_id }}
+          prerelease: true
+          files: |
+            /home/runner/aera/out/target/product/pagani/recovery.img
+            /home/runner/aera/out/target/product/pagani/AERA*.zip
+          fail_on_unmatched_files: false
