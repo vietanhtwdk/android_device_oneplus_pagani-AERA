@@ -27,10 +27,19 @@ jobs:
     permissions:
       contents: write
     steps:
+      # Install first: the next step hands almost all of / to the build volume.
+      - name: Set up tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y repo git-lfs ccache
+          sudo apt-get clean
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
         with:
-          root-reserve-mb: 4096
+          root-reserve-mb: 8192
           swap-size-mb: 8192
           remove-dotnet: "true"
           remove-android: "true"
@@ -38,14 +47,6 @@ jobs:
           remove-codeql: "true"
           remove-docker-images: "true"
           build-mount-path: /home/runner/aera
-
-      - name: Set up tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y repo git-lfs ccache
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          df -h /home/runner/aera
 
       - name: Sync AERA source
         working-directory: /home/runner/aera
@@ -55,7 +56,7 @@ jobs:
             --git-lfs
           repo sync -c --force-sync --no-clone-bundle --no-tags --optimized-fetch \
             -j"$(nproc)"
-          df -h .
+          df -h . /
 
       - name: Add device tree
         working-directory: /home/runner/aera
@@ -77,6 +78,7 @@ jobs:
           source build/envsetup.sh
           export ALLOW_MISSING_DEPENDENCIES=true
           export USE_CCACHE=1 CCACHE_EXEC="$(command -v ccache)"
+          export CCACHE_DIR=/home/runner/aera/.ccache CCACHE_MAXSIZE=8G
           lunch twrp_pagani-bp2a-eng
           mka adbd recoveryimage
           ls -la out/target/product/pagani/
