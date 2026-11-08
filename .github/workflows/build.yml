@@ -40,7 +40,7 @@ jobs:
         uses: easimon/maximize-build-space@v10
         with:
           root-reserve-mb: 8192
-          swap-size-mb: 8192
+          swap-size-mb: 32768
           remove-dotnet: "true"
           remove-android: "true"
           remove-haskell: "true"
@@ -80,7 +80,12 @@ jobs:
           export USE_CCACHE=1 CCACHE_EXEC="$(command -v ccache)"
           export CCACHE_DIR=/home/runner/aera/.ccache CCACHE_MAXSIZE=8G
           lunch twrp_pagani-bp2a-eng
-          mka adbd recoveryimage
+          # 16 GB runners: Soong analysis + parallel clang can exhaust RAM and
+          # kill the runner, so cap parallelism and log memory periodically.
+          (while true; do echo "[mem] $(date +%T) $(free -m | awk '/Mem/{print $3"/"$2" MB"}') swap $(free -m | awk '/Swap/{print $3"/"$2" MB"}')"; sleep 60; done) &
+          MON=$!
+          m -j4 adbd recoveryimage
+          kill $MON
           ls -la out/target/product/pagani/
 
       - name: Upload release
