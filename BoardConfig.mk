@@ -174,7 +174,7 @@ AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
 
 # Other AERA configurations
 TARGET_RECOVERY_QCOM_RTC_FIX := true
-AERA_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone2/temp" # CPU-0-0-0
+AERA_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone8/temp" # cpu-0-0-0 (numbering in recovery, differs from Android)
 AERA_EXCLUDE_APEX := true
 AERA_EXCLUDE_DEFAULT_USB_INIT := true
 AERA_DEFAULT_LANGUAGE := en
