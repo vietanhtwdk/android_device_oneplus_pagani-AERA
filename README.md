@@ -1,6 +1,6 @@
 # AERA Recovery device tree for OnePlus 13T / 13s (pagani)
 
-Unofficial, untested bring-up for **OnePlus 13T / 13s** (`pagani`, model
+Unofficial AERA Recovery for **OnePlus 13T / 13s** (`pagani`, model
 CPH2723 / CPH2727 / PKX110, device `OP612BL1` / `OP60F5L1`), Snapdragon 8 Elite
 (SM8750, `sun`), kernel 6.6.
 
@@ -9,14 +9,41 @@ Based on the official
 with pagani specifics from
 [koaaN/android_device_oneplus_pagani-orangefox](https://github.com/koaaN/android_device_oneplus_pagani-orangefox).
 
+![AERA Root Manager running on a OnePlus 13T](images/pagani-42629140285.jpg)
+
+## Tested
+
+Tested on a **OnePlus 13T (CPH2723) running OxygenOS 15.0.2.601 (EX01)**,
+Android 15, kernel `6.6.56-android15-8`, with build
+[`pagani-42629140285`](https://github.com/vietanhtwdk/android_device_oneplus_pagani-AERA/releases/tag/pagani-42629140285).
+Other OxygenOS/ColorOS versions have not been tested.
+
+| Feature | Status |
+|---|---|
+| Display and touch | Working |
+| Decryption (FBE + metadata, PIN via Weaver) | Working |
+| Vibration | Working |
+| ADB | Working |
+| MTP | Working |
+| Wi-Fi | Working |
+| Root Manager | Working |
+| Backup | Working |
+| CPU temperature | Fixed after the tested build (shows 0 in `pagani-42629140285`) |
+| Restore, ZIP flashing, fastbootd, OTA | Not yet tested |
+| Audio, mobile data, Bluetooth, fingerprint | Disabled in this tree |
+
 ## What changed from dodge
 
 - Product renamed to `pagani`; super size `14956888064`; screen 1216x2640;
-  CPU temperature zone `thermal_zone2`; assert devices
-  `pagani,PKX110,CPH2723,CPH2727,OP60F5L1,OP612BL1`.
-- Vendor/ODM blobs, trustlets (`vendor/firmware_mnt/image`), `msm_kgsl.ko`,
-  vibrator effects (`odm/etc/vibrator/809`) and Wi-Fi config refreshed from an
-  OxygenOS 15.0.2.601 (EX01) pagani device.
+  CPU temperature from `thermal_zone8` (`cpu-0-0-0` as numbered in recovery);
+  assert devices `pagani,PKX110,CPH2723,CPH2727,OP60F5L1,OP612BL1`.
+- From the pagani device (OxygenOS 15.0.2.601): GPU/display libraries,
+  `msm_kgsl.ko`, trustlets (`vendor/firmware_mnt/image`), vibrator effects
+  (`odm/etc/vibrator/809`) and Wi-Fi configuration.
+- Kept from dodge: the crypto, Weaver, secure element and vibrator blobs and
+  their init scripts. Dodge patches these for recovery (`libc++_v35.so`,
+  trimmed dependencies, recovery-specific rc files); replacing them with stock
+  files breaks decryption.
 - Removed for the first bring-up: dodge audio stack (`--dodge-stock-agm`),
   mobile data (carried dodge-specific NV data), Bluetooth post-decrypt modules,
   ultrasonic fingerprint path (`AERA_SUPPORT_FINGERPRINT := 0`).
@@ -31,22 +58,26 @@ the stock `vendor_boot` recovery module list, and basic touch works without
 mkdir -p ~/android/AERA_16.0 && cd ~/android/AERA_16.0
 repo init -u https://github.com/AERA-Recovery/android_manifest.git -b aera-16.0
 repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc)
-git clone -b aera-16.0 <this repo> device/oneplus/pagani
+git clone -b aera-16.0 https://github.com/vietanhtwdk/android_device_oneplus_pagani-AERA device/oneplus/pagani
 source build/envsetup.sh
 lunch twrp_pagani-bp2a-eng
 mka adbd recoveryimage
 ```
 
-Or run the **Build AERA (pagani)** GitHub Actions workflow.
+Or run the **Build AERA (pagani)** GitHub Actions workflow; the image is
+published under Releases.
 
-## Testing safely
+## Install
 
-The device has dedicated `recovery_a`/`recovery_b` partitions. Back up both
-first, then flash only the recovery partition:
+The device has dedicated `recovery_a`/`recovery_b` partitions and the image
+has no kernel, so `fastboot boot` does not work: flash it to the recovery
+partition of the active slot. This does not affect booting Android.
 
 ```bash
+fastboot getvar current-slot          # e.g. a
 fastboot flash recovery_a recovery.img
 fastboot reboot recovery
 ```
 
-Restore with `fastboot flash recovery_a recovery_a-backup.img`.
+Back up `recovery_a`/`recovery_b` first; restore with
+`fastboot flash recovery_a recovery_a-backup.img`.
